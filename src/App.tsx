@@ -1,13 +1,18 @@
 import "./App.css";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Header from "./components/custom/Header";
 import Hero from "./components/custom/Hero";
 
 function App() {
+  const location = useLocation();
+
+  // Only show Header and Hero on the root path
+  const showHeaderAndHero = location.pathname === "/";
+
   return (
     <>
-      {/* <Header /> */}
-      {/* <Hero /> */}
+      {showHeaderAndHero && <Header />}
+      {showHeaderAndHero && <Hero />}
       <Outlet />
     </>
   );
