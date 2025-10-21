@@ -123,7 +123,18 @@ const Design_Styles = [
   },
 ];
 
-function SliderStyle() {
+type Props = {
+  selectStyle: any;
+}
+
+export type DesignStyle = {
+  styleName: string,
+  colors: any,
+  designGuide: string,
+  icon: string,
+  bannerImage: any,}
+
+function SliderStyle({selectStyle}:Props) {
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   return (
     <div className="mt-5">
@@ -138,7 +149,8 @@ function SliderStyle() {
                 ? "p-0 border-2 border-primary rounded-2xl "
                 : ""
             } `}
-            onClick={() => setSelectedStyle(design.styleName)}
+            onClick={() => {setSelectedStyle(design.styleName); selectStyle(design);
+            }}
           >
             <img
               src={design.bannerImage}
