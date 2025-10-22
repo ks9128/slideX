@@ -1,13 +1,16 @@
 import OutlineSection from "@/components/custom/OutlineSection";
 import SliderStyle, { type DesignStyle } from "@/components/custom/SliderStyle";
 import { firebaseDb } from "@/config/firebaseConfig";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GeminiAiModel } from "@/config/firebaseConfig";
 import { ArrowRight, Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { UserDetailContext } from "@/context/UserDetailContext";
+import CreditLimitDialog from "@/components/custom/CreditLimitDialog";
+import { useNavigate } from "react-router";
+import { useAuth } from "@clerk/clerk-react";
 
 const OUTLINE_PROMPT = `Generate a PowerPoint slide outline for the topic {userInput}. Create {noOfSliders} slides in total. Each slide should include a topic name and a 2-line descriptive outline that clearly explains what content the slide will cover.
 Include the following structure:
@@ -24,56 +27,56 @@ Return the response only in JSON format, following this schema:
 ]
 `;
 
-const DUMMYOUTLINE = [
-  {
-    slideNo: "1",
-    slidePoint: "Welcome to Our Presentation",
-    outline:
-      "A warm introduction to the topic of AI-powered presentation generators.\nSetting the stage for an insightful exploration into this innovative technology.",
-  },
-  {
-    slideNo: "2",
-    slidePoint: "Today's Agenda",
-    outline:
-      "An overview of the key topics we will cover throughout this session.\nProviding a clear roadmap of what to expect from the presentation.",
-  },
-  {
-    slideNo: "3",
-    slidePoint: "Defining AI-Powered PPT Generators",
-    outline:
-      "Explaining what these tools are and how they leverage artificial intelligence.\nHighlighting their core function in automating presentation creation.",
-  },
-  {
-    slideNo: "4",
-    slidePoint: "How Do AI PPT Generators Work?",
-    outline:
-      "Detailing the input-output process and the AI technologies involved.\nExploring how algorithms transform raw information into structured slides.",
-  },
-  {
-    slideNo: "5",
-    slidePoint: "Key Benefits & Features",
-    outline:
-      "Showcasing the primary benefits like time-saving, consistency, and design quality.\nHighlighting features such as content generation, design automation, and intelligent suggestions.",
-  },
-  {
-    slideNo: "6",
-    slidePoint: "Use Cases & Applications",
-    outline:
-      "Illustrating practical scenarios across various industries and professions.\nProviding examples of how individuals and businesses leverage these tools effectively.",
-  },
-  {
-    slideNo: "7",
-    slidePoint: "The Future of AI in Presentations",
-    outline:
-      "Discussing upcoming advancements and the potential impact on presentation creation.\nForecasting how AI will continue to shape and enhance our communication methods.",
-  },
-  {
-    slideNo: "8",
-    slidePoint: "Thank You & Q&A",
-    outline:
-      "Expressing gratitude for attendance and opening the floor for questions.\nConcluding the session and encouraging further engagement with the audience.",
-  },
-];
+// const DUMMYOUTLINE = [
+//   {
+//     slideNo: "1",
+//     slidePoint: "Welcome to Our Presentation",
+//     outline:
+//       "A warm introduction to the topic of AI-powered presentation generators.\nSetting the stage for an insightful exploration into this innovative technology.",
+//   },
+//   {
+//     slideNo: "2",
+//     slidePoint: "Today's Agenda",
+//     outline:
+//       "An overview of the key topics we will cover throughout this session.\nProviding a clear roadmap of what to expect from the presentation.",
+//   },
+//   {
+//     slideNo: "3",
+//     slidePoint: "Defining AI-Powered PPT Generators",
+//     outline:
+//       "Explaining what these tools are and how they leverage artificial intelligence.\nHighlighting their core function in automating presentation creation.",
+//   },
+//   {
+//     slideNo: "4",
+//     slidePoint: "How Do AI PPT Generators Work?",
+//     outline:
+//       "Detailing the input-output process and the AI technologies involved.\nExploring how algorithms transform raw information into structured slides.",
+//   },
+//   {
+//     slideNo: "5",
+//     slidePoint: "Key Benefits & Features",
+//     outline:
+//       "Showcasing the primary benefits like time-saving, consistency, and design quality.\nHighlighting features such as content generation, design automation, and intelligent suggestions.",
+//   },
+//   {
+//     slideNo: "6",
+//     slidePoint: "Use Cases & Applications",
+//     outline:
+//       "Illustrating practical scenarios across various industries and professions.\nProviding examples of how individuals and businesses leverage these tools effectively.",
+//   },
+//   {
+//     slideNo: "7",
+//     slidePoint: "The Future of AI in Presentations",
+//     outline:
+//       "Discussing upcoming advancements and the potential impact on presentation creation.\nForecasting how AI will continue to shape and enhance our communication methods.",
+//   },
+//   {
+//     slideNo: "8",
+//     slidePoint: "Thank You & Q&A",
+//     outline:
+//       "Expressing gratitude for attendance and opening the floor for questions.\nConcluding the session and encouraging further engagement with the audience.",
+//   },
+// ];
 
 export type Project = {
   userInputPrompt: string;
@@ -91,13 +94,18 @@ export type Outline = {
 };
 
 function Outline() {
+  const { has } = useAuth();
+  const hasUnlimitedAccess = has && has({ plan: "unlimited" });
   const { projectId } = useParams<{ projectId: string }>();
   const [projectDetail, setProjectDetail] = useState<Project | null>(null);
   const [loading, setLoading] = useState(false);
   const [updateDbLoading, setUpdateDbLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [outline, setOutline] = useState<Outline[]>(DUMMYOUTLINE);
-  const [selectedStyle, setSelectedStyle] = useState<DesignStyle>()
+  const [outline, setOutline] = useState<Outline[]>();
+  const [selectedStyle, setSelectedStyle] = useState<DesignStyle>();
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const [openAlert, setOpenAlert] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (projectId) {
@@ -162,26 +170,52 @@ function Outline() {
 
   const handleUpdateOutline = (index: string, value: Outline) => {
     setOutline((prev) =>
-      prev.map((item) =>
+      prev?.map((item) =>
         item.slideNo === index ? { ...item, ...value } : item
       )
     );
   };
 
   const onGenerateSlider = async () => {
+    if (userDetail?.credits <= 0 && !hasUnlimitedAccess) {
+      //alert dialog
+      setOpenAlert(true);
+      return;
+    }
     setUpdateDbLoading(true);
     //undate db
-    await setDoc(doc(firebaseDb, "projects", projectId ?? ""),{
-      designStyle: selectedStyle,
-      outline: outline,
-    },{
-      merge: true
-    })
+    await setDoc(
+      doc(firebaseDb, "projects", projectId ?? ""),
+      {
+        designStyle: selectedStyle,
+        outline: outline,
+      },
+      {
+        merge: true,
+      }
+    );
+    !hasUnlimitedAccess &&
+      (await setDoc(
+        doc(firebaseDb, "users", userDetail?.email ?? ""),
+        {
+          credits: userDetail?.credits - 1,
+        },
+        {
+          merge: true,
+        }
+      ));
+
+    !hasUnlimitedAccess &&
+      setUserDetail((prev: any) => ({
+        ...prev,
+        credits: userDetail?.credits - 1,
+      }));
+
     setUpdateDbLoading(false);
 
     //Navigate to slider-Editor page
-
-  }
+    navigate("/workspace/project/" + projectId + "/editor");
+  };
 
   if (loading) {
     return <div className="p-4">Loading...</div>;
@@ -219,6 +253,8 @@ function Outline() {
         {updateDbLoading && <Loader2Icon className="animate-spin" />}
         Generate Sliders <ArrowRight />
       </Button>
+
+      <CreditLimitDialog openAlert={openAlert} setOpenAleart={setOpenAlert} />
     </div>
   );
 }
