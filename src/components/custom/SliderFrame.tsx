@@ -199,6 +199,60 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     // Get the current HTML of the selected element
     const oldHTML = selectedEl.outerHTML;
 
+    // Build AI prompt
+
+    const prompt = `
+  Regenerate or rewrite the following HTML code based on this user instruction.
+  If user asked to change the image/regenerate the image then make sure to use
+  ImageKit:
+'https://ik.imagekit.io/ks9128k/ik-genimg-prompt-{imagePrompt}/{altImageName}.jpg'
+Replace {imagePrompt} with relevant image prompt and altImageName with a random image name.
+if user want to crop image, or remove background or scale image or optimze image then add image kit ai transfromation 
+by providing ?tr=fo-auto,<other transfromation> etc.  
+  "User Instruction is :${userAiPrompt}"
+  HTML code:
+  ${oldHTML}
+  `;
+
+    try {
+      const result = await GeminiAiModel.generateContent(prompt);
+      const newHTML = (await result.response.text()).trim();
+
+      // ✅ Replace only the selected element
+      const tempDiv = iframe.contentDocument?.createElement("div");
+      if (tempDiv) {
+        tempDiv.innerHTML = newHTML;
+        const newNode = tempDiv.firstElementChild;
+
+        if (newNode && selectedEl.parentNode) {
+          selectedEl.parentNode.replaceChild(newNode, selectedEl);
+          selectedElRef.current = newNode as HTMLElement;
+          console.log("✅ Element replaced successfully");
+
+          const updatedSliderCode =
+            iframe.contentDocument?.body?.innerHTML || newHTML;
+          console.log(updatedSliderCode);
+          setUpdateSlider(updatedSliderCode);
+        }
+      }
+    } catch (err) {
+      console.error("AI generation failed:", err);
+    }
+
+    setLoading(false);
+  };
+
+  // ✅ Save slides to Firebase
+  const SaveAllSlides = async (updatedSlides: any[]) => {
+    if (!projectId) return;
+    await setDoc(
+      doc(firebaseDb, "projects", projectId),
+      { slides: updatedSlides },
+      { merge: true }
+    );
+    console.log("✅ Slides updated to Firestore");
+  };
+
   return (
     <div className="mb-5">
       <iframe
