@@ -1,13 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {getFirestore} from 'firebase/firestore'
-import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
-// import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAI, getGenerativeModel, getLiveGenerativeModel, GoogleAIBackend, ResponseModality } from "firebase/ai";
+
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "my-project-7489e.firebaseapp.com",
@@ -29,3 +26,12 @@ const ai = getAI(app, {backend: new GoogleAIBackend() });
 
 // Create a `GenerativeModel` instance with a model that supports your use case
 export const GeminiAiModel = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
+
+// Create a `LiveGenerativeModel` instance with the flash-live model (only model that supports the Live API)
+export const GeminiAiLiveModel = getLiveGenerativeModel(ai, {
+  model: "gemini-2.0-flash-live-001",
+  // Configure the model to respond with text
+  generationConfig: {
+    responseModalities: [ResponseModality.TEXT],
+  },
+});

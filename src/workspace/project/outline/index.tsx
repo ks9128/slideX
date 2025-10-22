@@ -81,6 +81,8 @@ export type Project = {
   createdAt: string;
   noOfSlider: string;
   outline: Outline[];
+  slides: any[];
+  designStyle: DesignStyle;
 };
 export type Outline = {
   slideNo: string;
