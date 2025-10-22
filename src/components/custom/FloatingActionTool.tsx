@@ -1,0 +1,54 @@
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+import { ArrowRight, Loader2Icon, Sparkle, Sparkles, X } from "lucide-react";
+import { Separator } from "../ui/separator";
+
+type Props = {
+  position: { x: number; y: number } | null;
+  onClose: () => void;
+  handleAiChange: any;
+  loading: boolean;
+};
+
+function FloatingActionTool({ position, onClose, handleAiChange ,loading}: Props) {
+  const [userAiPrompt, setUserAiPrompt] = useState<string>();
+  if (!position) return;
+  return (
+    <div
+      className="absolute z-50 bg-white text-sm px-3 py-2 rounded-lg shadow-xl border flex "
+      style={{
+        top: position.y + 10,
+        left: position.x,
+        transform: "translate(-80%)",
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <Sparkles className="h-4 w-4" />
+        <input
+          type="text"
+          placeholder="Edit with Ai"
+          className="outline-none border-none "
+          onChange={(e) => setUserAiPrompt(e.target.value)}
+          disabled={loading}
+          value={userAiPrompt}
+        />
+        {userAiPrompt && (
+          <Button
+            variant={"ghost"}
+            size={"icon-sm"}
+            onClick={() => {handleAiChange(userAiPrompt); setUserAiPrompt("")}}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        )}
+        {loading && <Loader2Icon className="animate-spin"/>}
+      </div>
+
+      <Button variant={"ghost"} size={"icon-sm"} onClick={onClose}>
+        <X />
+      </Button>
+    </div>
+  );
+}
+
+export default FloatingActionTool;
