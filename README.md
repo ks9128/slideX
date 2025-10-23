@@ -1,73 +1,106 @@
-# React + TypeScript + Vite
+# SlideX - Presentation Creation Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SlideX is a modern web application for creating beautiful presentations and slideshows. Built with React 19, TypeScript, and Vite, it provides a seamless experience for creating, editing, and managing presentations.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Modern UI/UX**: Clean and intuitive interface built with Radix UI and Tailwind CSS
+- **Presentation Management**: Create, edit, and organize your presentations
+- **Outline Creation**: Structured approach to building presentation outlines
+- **Visual Editor**: Rich editing experience for slide content
+- **User Authentication**: Secure authentication powered by Clerk
+- **Cloud Storage**: Firebase integration for saving and syncing your work
+- **Responsive Design**: Works across desktop and mobile devices
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, TypeScript, Vite
+- **Styling**: Tailwind CSS with Radix UI components
+- **Routing**: React Router v7
+- **Authentication**: Clerk
+- **Backend**: Firebase (Firestore for data storage)
+- **UI Components**: Radix UI, Lucide React Icons
+- **State Management**: React Context API
+- **Form Handling**: React Hook Form with Zod validation
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v16 or higher)
+- npm or yarn package manager
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+
+   ```
+   VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   ```
+
+4. Run the development server:
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Build for production:
+   ```bash
+   npm run build
+   # or
+   yarn build
+   ```
+
+## Project Structure
+
+```
+src/
+├── assets/           # Static assets
+├── components/       # Reusable UI components
+│   ├── custom/       # Application-specific components
+│   └── ui/           # Generic UI components
+├── config/           # Configuration files (Firebase)
+├── context/          # React context providers
+├── hooks/            # Custom React hooks
+├── lib/              # Utility functions
+├── workspace/        # Main application views
+│   ├── pricing/      # Pricing page
+│   └── project/      # Project-related views
+│       ├── outline/  # Presentation outline editor
+│       └── editor/   # Slide editor
+├── App.tsx           # Main application component
+└── main.tsx          # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Available Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `npm run dev` - Start the development server
+- `npm run build` - Build the production-ready application
+- `npm run lint` - Run ESLint for code quality checks
+- `npm run preview` - Preview the built application locally
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
