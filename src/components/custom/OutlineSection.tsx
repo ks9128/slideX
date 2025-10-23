@@ -7,12 +7,17 @@ import EditOutlineDialog from "@/assets/EditOutlineDialog";
 type Props = {
   loading: boolean;
   outline: Outline[];
-  handleUpdateOutline: any,
+  handleUpdateOutline: any;
+  editable?: boolean; // Added editable prop
 };
 
-function OutlineSection({ loading, outline, handleUpdateOutline }: Props) {
-
-
+function OutlineSection({
+  loading,
+  outline,
+  handleUpdateOutline,
+  editable = true,
+}: Props) {
+  // Added editable to destructuring with default value
 
   return (
     <div className="mt-7">
@@ -43,13 +48,19 @@ function OutlineSection({ loading, outline, handleUpdateOutline }: Props) {
                 <p>{item.outline}</p>
               </div>
             </div>
-            <EditOutlineDialog outlineData={item} onUpdate={handleUpdateOutline}>
-              <Button variant={"ghost"} size={"icon-lg"}><Edit /></Button>
-            </EditOutlineDialog>
+            {editable && ( // Conditionally render the edit button
+              <EditOutlineDialog
+                outlineData={item}
+                onUpdate={handleUpdateOutline}
+              >
+                <Button variant={"ghost"} size={"icon-lg"}>
+                  <Edit />
+                </Button>
+              </EditOutlineDialog>
+            )}
           </div>
         ))}
       </div>
-      
     </div>
   );
 }
