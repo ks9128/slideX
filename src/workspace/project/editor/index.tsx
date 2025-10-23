@@ -1,16 +1,19 @@
-import OutlineSection from '@/components/custom/OutlineSection'
-import { firebaseDb, GeminiAiLiveModel } from '@/config/firebaseConfig';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router';
-import type { Project } from '../outline';
-import SliderFrame from '@/components/custom/SliderFrame';
+import OutlineSection from "@/components/custom/OutlineSection";
+import { firebaseDb, GeminiAiLiveModel } from "@/config/firebaseConfig";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
+import type { Project } from "../outline";
+import SliderFrame from "@/components/custom/SliderFrame";
 import * as htmlToImage from "html-to-image";
 import PptxGenJS from "pptxgenjs";
-import { FileDown, InfoIcon, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-
+import { FileDown, InfoIcon, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { UserDetailContext } from "@/context/UserDetailContext";
+import { useContext } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import CreditLimitDialog from "@/components/custom/CreditLimitDialog";
 
 const SLIDER_PROMPT = `Generate HTML (TailwindCSS + Flowbite UI + Lucide Icons) 
 code for a 16:9 ppt slider in Modern Dark style.
@@ -37,8 +40,7 @@ Also do not add any overlay : Avoid this :
     <div class="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-20"></div>
 
 
-Just provide body content for 1 slider. Make sure all content, including images, stays within the main slide div and preserves the 16:9 ratio.`
-
+Just provide body content for 1 slider. Make sure all content, including images, stays within the main slide div and preserves the 16:9 ratio.`;
 
 // const DUMMY_SLIDER = ` <!-- Slide Content Wrapper (Fixed 16:9 Aspect Ratio) -->
 //     <div class="w-[800px] h-[500px] relative bg-[#0D0D0D] text-white overflow-hidden">
@@ -82,7 +84,7 @@ Just provide body content for 1 slider. Make sure all content, including images,
 //                         <span class="text-gray-400 text-xs font-medium">Slide</span>
 //                         <span class="text-accent font-bold text-xl">1</span>
 //                     </div>
-                
+
 //             </div>
 
 //             <!-- Subtle Lighting Effect (Optional) -->
@@ -94,210 +96,226 @@ Just provide body content for 1 slider. Make sure all content, including images,
 //     </div>`
 
 function Editor() {
+  const { has } = useAuth();
+  const hasUnlimitedAccess = has && has({ plan: "unlimited" });
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const { projectId } = useParams();
+  const [projectDetail, setProjectDetail] = useState<Project>();
+  const [loading, setLoading] = useState(false);
+  const [sliders, setSliders] = useState<any>([]);
+  const [isSlidesGenerated, setIsSlidesGenerated] = useState<any>();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
 
-    const { projectId } = useParams();
-    const [projectDetail, setProjectDetail] = useState<Project>();
-    const [loading, setLoading] = useState(false);
-    const [sliders, setSliders] = useState<any>([]);
-    const [isSlidesGenerated, setIsSlidesGenerated] = useState<any>();
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const [downloadLoading, setDownloadLoading] = useState(false);
-    useEffect(() => {
-        projectId && GetProjectDetail()
-    }, [projectId])
+  useEffect(() => {
+    projectId && GetProjectDetail();
+  }, [projectId]);
 
-    const GetProjectDetail = async () => {
-        setLoading(true);
-        const docRef = doc(firebaseDb, "projects", projectId ?? '');
-        const docSnap: any = await getDoc(docRef);
-        if (!docSnap.exists()) {
-            return;
-        }
-        console.log(JSON.stringify(docSnap.data()))
-        setProjectDetail(docSnap.data());
-        setLoading(false);
+  const GetProjectDetail = async () => {
+    setLoading(true);
+    const docRef = doc(firebaseDb, "projects", projectId ?? "");
+    const docSnap: any = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      return;
+    }
+    console.log(JSON.stringify(docSnap.data()));
+    setProjectDetail(docSnap.data());
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (projectDetail && !projectDetail?.slides?.length) {
+      GenerateSlides();
+    } else {
+      setSliders(projectDetail?.slides);
+    }
+  }, [projectDetail]);
+
+  const GenerateSlides = async () => {
+    if (!projectDetail?.outline || projectDetail.outline.length === 0) return;
+
+    console.log("🚀 Starting slide generation...");
+
+    for (
+      let index = 0;
+      index < projectDetail.outline.length && index < 3;
+      index++
+    ) {
+      const metaData = projectDetail.outline[index];
+      const prompt = SLIDER_PROMPT.replace(
+        "{DESIGN_STYLE}",
+        projectDetail?.designStyle?.designGuide ?? ""
+      )
+        .replace(
+          "{COLORS_CODE}",
+          JSON.stringify(projectDetail?.designStyle?.colors)
+        )
+        .replace("{METADATA}", JSON.stringify(metaData));
+
+      console.log("🧠 Generating slide", index + 1);
+      await GeminiSlideCall(prompt, index); // wait for one slide to finish before next
+      console.log("✅ Finished slide", index + 1);
     }
 
-    useEffect(() => {
-        if (projectDetail && !projectDetail?.slides?.length) {
-            GenerateSlides();
-        } else {
-            setSliders(projectDetail?.slides)
-        }
-    }, [projectDetail])
+    console.log("🎉 All slides generated!");
 
+    setIsSlidesGenerated(Date.now());
+  };
 
+  const GeminiSlideCall = async (prompt: string, index: number) => {
+    try {
+      const session = await GeminiAiLiveModel.connect();
+      await session.send(prompt);
 
-    const GenerateSlides = async () => {
-        if (!projectDetail?.outline || projectDetail.outline.length === 0) return;
+      let text = "";
 
-        console.log("🚀 Starting slide generation...");
+      // Read stream
+      for await (const message of session.receive()) {
+        if (message.type === "serverContent") {
+          const parts = message.modelTurn?.parts;
+          if (parts && parts.length > 0) {
+            text += parts?.map((p) => p.text).join("");
 
-        // Optional: initialize sliders to empty states
-        // setSliders(projectDetail.outline.map(() => ({ code: "" })));
+            const finalText = text
+              .replace(/```html/g, "")
+              .replace(/```/g, "")
+              .trim();
 
-        for (let index = 0; index < projectDetail.outline.length && index < 3; index++) {
-            const metaData = projectDetail.outline[index];
-            const prompt = SLIDER_PROMPT
-                .replace("{DESIGN_STYLE}", projectDetail?.designStyle?.designGuide ?? "")
-                .replace("{COLORS_CODE}", JSON.stringify(projectDetail?.designStyle?.colors))
-                .replace("{METADATA}", JSON.stringify(metaData));
-
-            console.log("🧠 Generating slide", index + 1);
-            await GeminiSlideCall(prompt, index); // wait for one slide to finish before next
-            console.log("✅ Finished slide", index + 1);
-        }
-
-        console.log("🎉 All slides generated!");
-
-        setIsSlidesGenerated(Date.now());
-    };
-
-
-    const GeminiSlideCall = async (prompt: string, index: number) => {
-        try {
-            const session = await GeminiAiLiveModel.connect();
-            await session.send(prompt);
-
-            let text = "";
-
-            // Read stream
-            for await (const message of session.receive()) {
-                if (message.type === "serverContent") {
-                    const parts = message.modelTurn?.parts;
-                    if (parts && parts.length > 0) {
-                        text += parts?.map((p) => p.text).join("");
-
-                        const finalText = text
-                            .replace(/```html/g, "")
-                            .replace(/```/g, "")
-                            .trim();
-
-                        // Live update the slider
-                        setSliders((prev: any[]) => {
-                            const updated = prev ? [...prev] : [];
-                            updated[index] = { code: finalText };
-                            return updated;
-                        });
-                    }
-
-                    if (message.turnComplete) {
-                        console.log("✅ Slide", index + 1, "complete");
-                        break; // important: exit loop when done
-                    }
-                }
-            }
-
-            session.close();
-        } catch (err) {
-            console.error("❌ Error generating slide", index + 1, err);
-        }
-    };
-
-    useEffect(() => {
-        if (isSlidesGenerated)
-            SaveAllSlides();
-    }, [isSlidesGenerated])
-
-    const SaveAllSlides = async () => {
-        await setDoc(doc(firebaseDb, "projects", projectId ?? ''), {
-            slides: sliders
-        }, {
-            merge: true
-        })
-    }
-
-
-    const updateSliderCode = (updateSlideCode: string, index: number) => {
-        setSliders((prev: any) => {
-            const updated = [...prev];
-            updated[index] = {
-                ...updated[index],
-                code: updateSlideCode
-            }
-            return updated
-        });
-        setIsSlidesGenerated(Date.now())
-    }
-
-
-
-    const exportAllIframesToPPT = async () => {
-        if (!containerRef.current) return;
-        setDownloadLoading(true);
-        const pptx = new PptxGenJS();
-        const iframes = containerRef.current.querySelectorAll("iframe");
-
-        for (let i = 0; i < iframes.length; i++) {
-            const iframe = iframes[i] as HTMLIFrameElement;
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-            if (!iframeDoc) continue;
-
-            // Grab the main slide element inside the iframe (usually <body> or inner div)
-            const slideNode =
-                iframeDoc.querySelector("body > div") || iframeDoc.body;
-            if (!slideNode) continue;
-
-            console.log(`Exporting slide ${i + 1}...`);
-            //@ts-ignore
-            const dataUrl = await htmlToImage.toPng(slideNode, { quality: 1 });
-
-            const slide = pptx.addSlide();
-            slide.addImage({
-                data: dataUrl,
-                x: 0,
-                y: 0,
-                w: 10,
-                h: 5.625,
+            // Live update the slider
+            setSliders((prev: any[]) => {
+              const updated = prev ? [...prev] : [];
+              updated[index] = { code: finalText };
+              return updated;
             });
+          }
+
+          if (message.turnComplete) {
+            console.log("✅ Slide", index + 1, "complete");
+            break; // important: exit loop when done
+          }
         }
-        setDownloadLoading(false);
-        pptx.writeFile({ fileName: "MyProjectSlides.pptx" });
-    };
+      }
 
+      session.close();
+    } catch (err) {
+      console.error("❌ Error generating slide", index + 1, err);
+    }
+  };
 
+  useEffect(() => {
+    if (isSlidesGenerated) SaveAllSlides();
+  }, [isSlidesGenerated]);
 
-    return (
-        <div>
-            <div className='flex items-center justify-center mt-4'>
-                <Alert variant="destructive" className='max-w-lg'>
-                    <InfoIcon />
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        This is Application Demo, Maximum 4 Slider can generator for demo
-                    </AlertDescription>
-                </Alert>
-            </div>
-            <div className='grid grid-cols-5 p-10 gap-10 '>
-                <div className='col-span-2 h-[90vh] overflow-auto '>
-                    {/* Outlines  */}
-                    <OutlineSection outline={projectDetail?.outline ?? []}
-                        handleUpdateOutline={() => console.log()}
-                        loading={loading}
-                        editable={false}
-                    />
-                </div>
-                <div className='col-span-3 h-screen overflow-auto' ref={containerRef}>
-                    {/* Slides  */}
-                    {sliders?.map((slide: any, index: number) => (
-                        <SliderFrame slide={slide} key={index}
-                            colors={projectDetail?.designStyle?.colors}
-                            setUpdateSlider={(updateSlideCode: string) => updateSliderCode(updateSlideCode, index)}
-                        />
+  const SaveAllSlides = async () => {
+    await setDoc(
+      doc(firebaseDb, "projects", projectId ?? ""),
+      {
+        slides: sliders,
+      },
+      {
+        merge: true,
+      }
+    );
+  };
 
-                    ))}
+  const updateSliderCode = (updateSlideCode: string, index: number) => {
+    setSliders((prev: any) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        code: updateSlideCode,
+      };
+      return updated;
+    });
+    setIsSlidesGenerated(Date.now());
+  };
 
-                </div>
-                {/* Export button */}
-                <Button onClick={exportAllIframesToPPT} size={'lg'} className='fixed bottom-6
-            transform left-1/2 -translate-x-1/2'
-                    disabled={downloadLoading}
-                >
-                    {downloadLoading ? <Loader2 className='animate-spin' /> : <FileDown />} Export PPT
-                </Button>
-            </div>
+  const exportAllIframesToPPT = async () => {
+    if (!containerRef.current) return;
+    setDownloadLoading(true);
+    const pptx = new PptxGenJS();
+    const iframes = containerRef.current.querySelectorAll("iframe");
+
+    for (let i = 0; i < iframes.length; i++) {
+      const iframe = iframes[i] as HTMLIFrameElement;
+      const iframeDoc =
+        iframe.contentDocument || iframe.contentWindow?.document;
+      if (!iframeDoc) continue;
+
+      // Grab the main slide element inside the iframe (usually <body> or inner div)
+      const slideNode = iframeDoc.querySelector("body > div") || iframeDoc.body;
+      if (!slideNode) continue;
+
+      console.log(`Exporting slide ${i + 1}...`);
+      //@ts-ignore
+      const dataUrl = await htmlToImage.toPng(slideNode, { quality: 1 });
+
+      const slide = pptx.addSlide();
+      slide.addImage({
+        data: dataUrl,
+        x: 0,
+        y: 0,
+        w: 10,
+        h: 5.625,
+      });
+    }
+    setDownloadLoading(false);
+    pptx.writeFile({ fileName: "MyProjectSlides.pptx" });
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-center mt-4">
+        <Alert variant="destructive" className="max-w-lg">
+          <InfoIcon />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            This is Application Demo, Maximum 3 Slider can generator for demo
+          </AlertDescription>
+        </Alert>
+      </div>
+      <div className="grid grid-cols-5 p-10 gap-10 ">
+        <div className="col-span-2 h-[90vh] overflow-auto ">
+          {/* Outlines  */}
+          <OutlineSection
+            outline={projectDetail?.outline ?? []}
+            handleUpdateOutline={() => console.log()}
+            loading={loading}
+            editable={false}
+          />
         </div>
-    )
+        <div className="col-span-3 h-screen overflow-auto" ref={containerRef}>
+          {/* Slides  */}
+          {sliders?.map((slide: any, index: number) => (
+            <SliderFrame
+              slide={slide}
+              key={index}
+              colors={projectDetail?.designStyle?.colors}
+              setUpdateSlider={(updateSlideCode: string) =>
+                updateSliderCode(updateSlideCode, index)
+              }
+            />
+          ))}
+        </div>
+        {/* Export button */}
+        <Button
+          onClick={exportAllIframesToPPT}
+          size={"lg"}
+          className="fixed bottom-6
+            transform left-1/2 -translate-x-1/2"
+          disabled={downloadLoading}
+        >
+          {downloadLoading ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <FileDown />
+          )}{" "}
+          Export PPT
+        </Button>
+      </div>
+    </div>
+  );
 }
 
-export default Editor
+export default Editor;
