@@ -1,4 +1,3 @@
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,13 +7,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-
 } from "@/components/ui/alert-dialog";
 import { Link } from "react-router";
 
 type Props = {
   openAlert: boolean;
-  setOpenAleart: any
+  setOpenAleart: any;
 };
 
 function CreditLimitDialog({ openAlert, setOpenAleart }: Props) {
@@ -32,9 +30,9 @@ function CreditLimitDialog({ openAlert, setOpenAleart }: Props) {
             <AlertDialogCancel onClick={() => setOpenAleart(false)}>
               Cancel
             </AlertDialogCancel>
-            <Link to={"workspace/pricing"}>
-              <AlertDialogAction>Pricing</AlertDialogAction>
-            </Link>
+            <AlertDialogAction asChild>
+              <Link to="/workspace/pricing">Pricing</Link>
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -42,4 +40,4 @@ function CreditLimitDialog({ openAlert, setOpenAleart }: Props) {
   );
 }
 
-export default CreditLimitDialog
+export default CreditLimitDialog;

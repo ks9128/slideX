@@ -1,6 +1,6 @@
 import { firebaseDb, GeminiAiModel } from "@/config/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import FloatingActionTool from "./FloatingActionTool";
 
@@ -88,7 +88,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     if (!iframeRef.current) return;
     const iframe = iframeRef.current;
     const doc = iframeRef.current.contentDocument;
-    if (!doc) return;
+    if (!doc) return; 
 
     // Write the HTML inside the iframe
     doc.open();

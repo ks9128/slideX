@@ -49,62 +49,97 @@ function MyProjects() {
   return (
     <div className="mx-32 mt-20 mb-10">
       <div className="flex justify-between items-center">
-        <h2>My Projects</h2>
-        <Button>+ Create New project</Button>
+        <h2 className="text-3xl font-bold text-foreground">My Projects</h2>
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors">
+          + Create New Project
+        </Button>
       </div>
       <div>
         {!projects.length ? (
-          <Empty>
+          <Empty className="bg-background border border-border rounded-xl p-8">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <FolderIcon />
+                <FolderIcon className="text-foreground" />
               </EmptyMedia>
-              <EmptyTitle>No Projects Yet</EmptyTitle>
-              <EmptyDescription>
+              <EmptyTitle className="text-foreground">
+                No Projects Yet
+              </EmptyTitle>
+              <EmptyDescription className="text-muted-foreground">
                 You haven&apos;t created any projects yet. Get started by
                 creating your first project.
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
               <div className="flex gap-2">
-                <Button>Create Project</Button>
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  Create Project
+                </Button>
               </div>
             </EmptyContent>
             <Button
               variant="link"
               asChild
-              className="text-muted-foreground"
+              className="text-muted-foreground hover:text-foreground"
               size="sm"
             >
               <a href="#">
-                Learn More <ArrowUpRightIcon />
+                Learn More <ArrowUpRightIcon className="ml-1" />
               </a>
             </Button>
           </Empty>
         ) : (
-          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8">
             {projects.map((project, index) => (
-              <Link to={"/workspace/project/" + project.projectId + "/editor"}>
-                <div
-                  className="p-4 border rounded-2xl shadow mt-3 space-y-1"
-                  key={index}
-                >
-                  <img
-                    src="src\assets\logo.png"
-                    alt="png"
-                    width={50}
-                    height={50}
-                  />
-                  <h2 className="font-bold text-lg">
-                    {project?.userInputPrompt}
-                  </h2>
-                  <h2 className="not-first:text-red-600">
-                    {" "}
-                    Total {project?.slides?.length} Slides{" "}
-                  </h2>
-                  <p className="text-gray-400">
-                    {FormatDate(project?.createdAt)}
-                  </p>
+              <Link
+                to={"/workspace/project/" + project.projectId + "/editor"}
+                key={index}
+              >
+                <div className="group bg-background border border-border rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full hover:border-primary/30">
+                  <div className="p-5 flex-grow flex flex-col">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="bg-primary/10 p-2 rounded-lg">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-primary"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                      </div>
+                      <span className="text-xs font-medium bg-muted/50 text-muted-foreground px-2 py-1 rounded-full">
+                        {project?.slides?.length || 0} slides
+                      </span>
+                    </div>
+                    <h2 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                      {project?.userInputPrompt || "Untitled Project"}
+                    </h2>
+                    <div className="mt-auto pt-3">
+                      <p className="text-muted-foreground text-sm flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        {FormatDate(project?.createdAt)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}

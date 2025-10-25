@@ -14,6 +14,8 @@ import { UserDetailContext } from "./context/UserDetailContext.tsx";
 import Outline from "./workspace/project/outline/index.tsx";
 import Editor from "./workspace/project/editor/index.tsx";
 import Pricing from "./workspace/pricing/index.tsx";
+import { shadcn } from "@clerk/themes";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -38,7 +40,12 @@ if (!PUBLISHABLE_KEY) {
 function Root() {
   const [userDetail, setUserDetail] = useState();
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      appearance={{
+        baseTheme: shadcn,
+      }}
+    >
       <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
         <RouterProvider router={router} />
       </UserDetailContext.Provider>
