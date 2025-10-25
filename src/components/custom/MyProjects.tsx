@@ -35,11 +35,25 @@ function MyProjects() {
       where("createdBy", "==", user?.primaryEmailAddress?.emailAddress)
     );
     const querySnapshot = await getDocs(q);
+    const projectsList: any[] = [];
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       console.log(doc.id, " => ", doc.data());
-      setProjects((prev: any) => [...prev, doc.data()]);
+      projectsList.push(doc.data());
     });
+
+    // Sort projects by createdAt date (newest first)
+    projectsList.sort((a, b) => {
+      const dateA = a.createdAt?.toDate
+        ? a.createdAt.toDate()
+        : new Date(a.createdAt);
+      const dateB = b.createdAt?.toDate
+        ? b.createdAt.toDate()
+        : new Date(b.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    setProjects(projectsList);
   };
   const FormatDate = (Timestamp: any) => {
     const Formatdate = moment(Timestamp).fromNow();
