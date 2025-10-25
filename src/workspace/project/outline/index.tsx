@@ -227,8 +227,10 @@ function Outline() {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="max-w-3xl">
-        <h2 className="text-2xl font-bold mb-4">Setting and Slider Outline</h2>
+      <div className="max-w-3xl w-full px-4">
+        <h2 className="text-4xl font-bold mb-6 text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+          Presentation Settings <span className="text-primary">&</span> Outline
+        </h2>
         <SliderStyle
           selectStyle={(value: DesignStyle) => setSelectedStyle(value)}
         />
@@ -242,12 +244,12 @@ function Outline() {
       </div>
       <Button
         size={"lg"}
-        className="fixed bottom-6 transform left-1/2 -translate-x-1/2"
+        className="fixed bottom-6 transform left-1/2 -translate-x-1/2 shadow-lg hover:shadow-xl transition-shadow"
         onClick={onGenerateSlider}
         disabled={updateDbLoading || loading}
       >
-        {updateDbLoading && <Loader2Icon className="animate-spin" />}
-        Generate Sliders <ArrowRight />
+        {updateDbLoading && <Loader2Icon className="animate-spin mr-2" />}
+        Generate Slides <ArrowRight className="ml-2" />
       </Button>
 
       <CreditLimitDialog openAlert={openAlert} setOpenAleart={setOpenAlert} />
