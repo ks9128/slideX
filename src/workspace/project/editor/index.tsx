@@ -266,7 +266,7 @@ function Editor() {
 
   return (
     <div>
-      <div className="flex items-center justify-center mt-4">
+      {/* <div className="flex items-center justify-center mt-4">
         <Alert variant="destructive" className="max-w-lg">
           <InfoIcon />
           <AlertTitle>Heads up!</AlertTitle>
@@ -274,7 +274,7 @@ function Editor() {
             This is Application Demo, Maximum 3 Slider can generator for demo
           </AlertDescription>
         </Alert>
-      </div>
+      </div> */}
       <div className="grid grid-cols-5 p-10 gap-10 ">
         <div className="col-span-2 h-[90vh] overflow-auto ">
           {/* Outlines  */}

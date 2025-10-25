@@ -88,7 +88,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     if (!iframeRef.current) return;
     const iframe = iframeRef.current;
     const doc = iframeRef.current.contentDocument;
-    if (!doc) return; 
+    if (!doc) return;
 
     // Write the HTML inside the iframe
     doc.open();
@@ -121,28 +121,33 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       e.stopPropagation(); // ✅ allow editing text inside
       const target = e.target as HTMLElement;
 
+      // Remove highlight from previously selected element
       if (selectedEl && selectedEl !== target) {
         selectedEl.style.outline = "";
         selectedEl.removeAttribute("contenteditable");
+        try {
+          selectedEl.removeEventListener("blur", handleBlur);
+        } catch (err) {
+          console.log("Error removing blur listener:", err);
+        }
       }
 
       selectedEl = target;
-
       selectedElRef.current = target;
 
-      if (selectedEl && selectedEl !== target) {
-        selectedEl.style.outline = "";
-        selectedEl.removeAttribute("contenteditable");
-      }
-
-      selectedEl = target;
+      // Highlight the newly selected element
       selectedEl.style.outline = "2px solid blue";
       selectedEl.setAttribute("contenteditable", "true");
       selectedEl.focus();
 
-      console.log("Selected element:", selectedEl);
       // ✅ Attach blur event dynamically
-      // selectedEl?.addEventListener("blur", handleBlur);
+      try {
+        selectedEl.addEventListener("blur", handleBlur);
+      } catch (err) {
+        console.log("Error adding blur listener:", err);
+      }
+
+      console.log("Selected element:", selectedEl);
 
       // ✅ Calculate position relative to iframe container
       const rect = target.getBoundingClientRect();
@@ -160,6 +165,13 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
         const updatedSliderCode = iframe.contentDocument?.body?.innerHTML;
         console.log(updatedSliderCode);
         setUpdateSlider(updatedSliderCode);
+
+        // Remove highlight when element loses focus
+        selectedEl.style.outline = "";
+        selectedEl.removeAttribute("contenteditable");
+        selectedEl = null;
+        selectedElRef.current = null;
+        setCardPosition(null); // Close the AI popup
       }
     };
 
@@ -167,8 +179,14 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       if (e.key === "Escape" && selectedEl) {
         selectedEl.style.outline = "";
         selectedEl.removeAttribute("contenteditable");
-        selectedEl.removeEventListener("blur", handleBlur);
+        try {
+          selectedEl.removeEventListener("blur", handleBlur);
+        } catch (err) {
+          console.log("Error removing blur listener:", err);
+        }
         selectedEl = null;
+        selectedElRef.current = null;
+        setCardPosition(null); // Close the AI popup
       }
     };
 
@@ -182,6 +200,20 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
 
     // ✅ Cleanup listeners on unmount
     return () => {
+      // Clean up any remaining highlights
+      if (selectedEl) {
+        selectedEl.style.outline = "";
+        selectedEl.removeAttribute("contenteditable");
+        try {
+          selectedEl.removeEventListener("blur", handleBlur);
+        } catch (err) {
+          console.log("Error removing blur listener:", err);
+        }
+      }
+      if (hoverEl) {
+        hoverEl.style.outline = "";
+      }
+
       doc.body?.removeEventListener("mouseover", handleMouseOver);
       doc.body?.removeEventListener("mouseout", handleMouseOut);
       doc.body?.removeEventListener("click", handleClick);
@@ -194,7 +226,10 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     const selectedEl = selectedElRef.current;
     const iframe = iframeRef.current;
 
-    if (!selectedEl || !iframe) return;
+    if (!selectedEl || !iframe) {
+      setLoading(false);
+      return;
+    }
 
     // Get the current HTML of the selected element
     const oldHTML = selectedEl.outerHTML;
@@ -240,6 +275,7 @@ by providing ?tr=fo-auto,<other transfromation> etc.
     }
 
     setLoading(false);
+    setCardPosition(null); // Close popup after AI change
   };
 
   // ✅ Save slides to Firebase
