@@ -2,6 +2,7 @@ import "./App.css";
 import { Outlet, useLocation } from "react-router";
 import Header from "./components/custom/Header";
 import Hero from "./components/custom/Hero";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function App() {
       {showHeaderAndHero && <Header />}
       {showHeaderAndHero && <Hero />}
       <Outlet />
+      <Analytics />
     </>
   );
 }
