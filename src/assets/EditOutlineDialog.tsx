@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -13,15 +13,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-function EditOutlineDialog({ children, outlineData ,onUpdate}: any) {
+function EditOutlineDialog({ children, outlineData, onUpdate }: any) {
   const [localData, setLocalData] = useState(outlineData);
-  const [openDialog,setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     setLocalData({ ...localData, [field]: value });
   };
   const handleUpdate = () => {
-    onUpdate(outlineData?.slideNo,localData)
+    onUpdate(outlineData?.slideNo, localData);
     setOpenDialog(false);
   };
   return (

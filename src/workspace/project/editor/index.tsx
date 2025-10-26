@@ -7,13 +7,8 @@ import type { Project } from "../outline";
 import SliderFrame from "@/components/custom/SliderFrame";
 import * as htmlToImage from "html-to-image";
 import PptxGenJS from "pptxgenjs";
-import { FileDown, InfoIcon, Loader2 } from "lucide-react";
+import { FileDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UserDetailContext } from "@/context/UserDetailContext";
-import { useContext } from "react";
-import { useAuth } from "@clerk/clerk-react";
-import CreditLimitDialog from "@/components/custom/CreditLimitDialog";
 
 const SLIDER_PROMPT = `Generate HTML (TailwindCSS + Flowbite UI + Lucide Icons) 
 code for a 16:9 ppt slider in Modern Dark style.
@@ -96,9 +91,6 @@ Just provide body content for 1 slider. Make sure all content, including images,
 //     </div>`
 
 function Editor() {
-  const { has } = useAuth();
-  const hasUnlimitedAccess = has && has({ plan: "unlimited" });
-  const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const { projectId } = useParams();
   const [projectDetail, setProjectDetail] = useState<Project>();
   const [loading, setLoading] = useState(false);
@@ -106,7 +98,6 @@ function Editor() {
   const [isSlidesGenerated, setIsSlidesGenerated] = useState<any>();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [downloadLoading, setDownloadLoading] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
 
   useEffect(() => {
     projectId && GetProjectDetail();

@@ -26,7 +26,7 @@ const MenuOptions = [
 function Header() {
   const { user } = useUser();
   const location = useLocation();
-  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const { userDetail } = useContext(UserDetailContext);
   const { has } = useAuth();
   const hasUnlimitedAccess = has && has({ plan: "unlimited" });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

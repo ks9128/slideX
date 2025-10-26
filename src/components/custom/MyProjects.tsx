@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Empty,
@@ -10,17 +10,10 @@ import {
 } from "@/components/ui/empty";
 import { ArrowUpRightIcon, FolderIcon } from "lucide-react";
 import type { Project } from "@/workspace/project/outline";
-import {
-  collection,
-  getDocs,
-  query,
-  Timestamp,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { firebaseDb } from "@/config/firebaseConfig";
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
-import { formatDate } from "date-fns";
 import { Link } from "react-router";
 function MyProjects() {
   const [projects, setProjects] = useState<Project[]>([]);

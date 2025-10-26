@@ -1,7 +1,5 @@
-import { firebaseDb, GeminiAiModel } from "@/config/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { GeminiAiModel } from "@/config/firebaseConfig";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
 import FloatingActionTool from "./FloatingActionTool";
 
 const HTML_DEFAULT = `<!DOCTYPE html>
@@ -71,7 +69,6 @@ type props = {
 };
 
 function SliderFrame({ slide, colors, setUpdateSlider }: props) {
-  const { projectId } = useParams();
   const FINAL_CODE = HTML_DEFAULT.replace(
     "{colorCodes}",
     JSON.stringify(colors)
@@ -147,7 +144,6 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
 
       // Calculate position relative to iframe container
       const rect = target.getBoundingClientRect();
-      const iframeRect = iframe.getBoundingClientRect();
 
       setCardPosition({
         x: rect.left + rect.width / 2,
@@ -241,17 +237,6 @@ by providing ?tr=fo-auto,<other transfromation> etc.
     }
 
     setLoading(false);
-  };
-
-  // Save slides to Firebase
-  const SaveAllSlides = async (updatedSlides: any[]) => {
-    if (!projectId) return;
-    await setDoc(
-      doc(firebaseDb, "projects", projectId),
-      { slides: updatedSlides },
-      { merge: true }
-    );
-    // console.log("Slides updated to Firestore");
   };
 
   return (

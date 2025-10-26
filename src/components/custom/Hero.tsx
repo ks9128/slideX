@@ -1,8 +1,7 @@
-import React from "react";
 import { HeroVideoDialog } from "../ui/hero-video-dialog";
 import { Button } from "../ui/button";
 import { Play } from "lucide-react";
-import { useUser, SignInButton, SignIn } from "@clerk/clerk-react";
+import { useUser, SignInButton } from "@clerk/clerk-react";
 import { Link } from "react-router";
 function Hero() {
   const { user } = useUser();
