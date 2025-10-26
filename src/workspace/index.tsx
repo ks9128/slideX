@@ -24,7 +24,7 @@ function Workspace() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
+          // console.log("Document data:", docSnap.data());
           setUserDetail(docSnap.data());
         } else {
           // insert new user in db
@@ -37,13 +37,13 @@ function Workspace() {
           try {
             await setDoc(docRef, { ...data });
             setUserDetail(data);
-            console.log("User successfully created in database");
+            // console.log("User successfully created in database");
           } catch (setError) {
-            console.error("Error creating user in database:", setError);
+            // console.error("Error creating user in database:", setError);
           }
         }
       } catch (getError) {
-        console.error("Error checking if user exists:", getError);
+        // console.error("Error checking if user exists:", getError);
       }
     }
   };

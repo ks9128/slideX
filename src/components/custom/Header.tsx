@@ -27,7 +27,6 @@ function Header() {
   const { user } = useUser();
   const location = useLocation();
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
-  console.log(location.pathname);
   const { has } = useAuth();
   const hasUnlimitedAccess = has && has({ plan: "unlimited" });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

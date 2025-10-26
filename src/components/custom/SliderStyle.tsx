@@ -9,7 +9,7 @@ import glassmorphism from "./../../assets/glassmorphism.jpg";
 
 const Design_Styles = [
   {
-    styleName: "Futuristic Neon ⚡️",
+    styleName: "Futuristic Neon ",
     colors: {
       primary: "#00FFFF",
       secondary: "#FF00FF",
@@ -23,7 +23,7 @@ const Design_Styles = [
     bannerImage: techSlider,
   },
   {
-    styleName: "Modern Glassmorphism 💎",
+    styleName: "Modern Glassmorphism ",
     colors: {
       primary: "#FFFFFF", // White
       secondary: "#E0E0E0", // Light Grey
@@ -37,7 +37,7 @@ const Design_Styles = [
     bannerImage: glassmorphism,
   },
   {
-    styleName: "Minimalist Bauhaus 🟥",
+    styleName: "Minimalist Bauhaus ",
     colors: {
       primary: "#1C1C1C", // Black
       secondary: "#E20613", // Bold Red
@@ -51,7 +51,7 @@ const Design_Styles = [
     bannerImage: minimalist,
   },
   {
-    styleName: "Modern Gradient 🌈",
+    styleName: "Modern Gradient ",
     colors: {
       primary: "#8A2BE2",
       secondary: "#00C9FF",
@@ -65,7 +65,7 @@ const Design_Styles = [
     bannerImage: ModernGradientSlider,
   },
   {
-    styleName: "Elegant Dark 💜",
+    styleName: "Elegant Dark ",
     colors: {
       primary: "#D0D0D0",
       secondary: "#1F1F1F",
@@ -79,7 +79,7 @@ const Design_Styles = [
     bannerImage: DarkSlider,
   },
   {
-    styleName: "Abstract Watercolor 🎨",
+    styleName: "Abstract Watercolor ",
     colors: {
       primary: "#005F73", // Deep Teal
       secondary: "#94D2BD", // Soft Mint

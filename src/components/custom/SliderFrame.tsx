@@ -118,60 +118,49 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     };
 
     const handleClick = (e: MouseEvent) => {
-      e.stopPropagation(); // ✅ allow editing text inside
+      e.preventDefault(); // Prevent any default browser behavior that might cause page refresh
+      e.stopPropagation(); // allow editing text inside
       const target = e.target as HTMLElement;
 
-      // Remove highlight from previously selected element
       if (selectedEl && selectedEl !== target) {
         selectedEl.style.outline = "";
         selectedEl.removeAttribute("contenteditable");
-        try {
-          selectedEl.removeEventListener("blur", handleBlur);
-        } catch (err) {
-          console.log("Error removing blur listener:", err);
-        }
       }
 
       selectedEl = target;
+
       selectedElRef.current = target;
 
-      // Highlight the newly selected element
+      if (selectedEl && selectedEl !== target) {
+        selectedEl.style.outline = "";
+        selectedEl.removeAttribute("contenteditable");
+      }
+
+      selectedEl = target;
       selectedEl.style.outline = "2px solid blue";
       selectedEl.setAttribute("contenteditable", "true");
       selectedEl.focus();
 
-      // ✅ Attach blur event dynamically
-      try {
-        selectedEl.addEventListener("blur", handleBlur);
-      } catch (err) {
-        console.log("Error adding blur listener:", err);
-      }
+      // console.log("Selected element:", selectedEl);
+      // Attach blur event dynamically
+      // selectedEl?.addEventListener("blur", handleBlur);
 
-      console.log("Selected element:", selectedEl);
-
-      // ✅ Calculate position relative to iframe container
+      // Calculate position relative to iframe container
       const rect = target.getBoundingClientRect();
       const iframeRect = iframe.getBoundingClientRect();
 
       setCardPosition({
-        x: iframeRect.left + rect.left + rect.width / 2,
-        y: iframeRect.top + rect.bottom,
+        x: rect.left + rect.width / 2,
+        y: rect.bottom + 10, // Position below the element with a small gap
       });
     };
 
     const handleBlur = () => {
       if (selectedEl) {
-        console.log("Final edited element:", selectedEl.outerHTML);
+        // console.log("Final edited element:", selectedEl.outerHTML);
         const updatedSliderCode = iframe.contentDocument?.body?.innerHTML;
         console.log(updatedSliderCode);
         setUpdateSlider(updatedSliderCode);
-
-        // Remove highlight when element loses focus
-        selectedEl.style.outline = "";
-        selectedEl.removeAttribute("contenteditable");
-        selectedEl = null;
-        selectedElRef.current = null;
-        setCardPosition(null); // Close the AI popup
       }
     };
 
@@ -179,18 +168,12 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       if (e.key === "Escape" && selectedEl) {
         selectedEl.style.outline = "";
         selectedEl.removeAttribute("contenteditable");
-        try {
-          selectedEl.removeEventListener("blur", handleBlur);
-        } catch (err) {
-          console.log("Error removing blur listener:", err);
-        }
+        selectedEl.removeEventListener("blur", handleBlur);
         selectedEl = null;
-        selectedElRef.current = null;
-        setCardPosition(null); // Close the AI popup
       }
     };
 
-    // ✅ Wait for DOM content to be ready
+    // Wait for DOM content to be ready
     doc.addEventListener("DOMContentLoaded", () => {
       doc.body?.addEventListener("mouseover", handleMouseOver);
       doc.body?.addEventListener("mouseout", handleMouseOut);
@@ -198,22 +181,8 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       doc.body?.addEventListener("keydown", handleKeyDown);
     });
 
-    // ✅ Cleanup listeners on unmount
+    // Cleanup listeners on unmount
     return () => {
-      // Clean up any remaining highlights
-      if (selectedEl) {
-        selectedEl.style.outline = "";
-        selectedEl.removeAttribute("contenteditable");
-        try {
-          selectedEl.removeEventListener("blur", handleBlur);
-        } catch (err) {
-          console.log("Error removing blur listener:", err);
-        }
-      }
-      if (hoverEl) {
-        hoverEl.style.outline = "";
-      }
-
       doc.body?.removeEventListener("mouseover", handleMouseOver);
       doc.body?.removeEventListener("mouseout", handleMouseOut);
       doc.body?.removeEventListener("click", handleClick);
@@ -226,10 +195,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
     const selectedEl = selectedElRef.current;
     const iframe = iframeRef.current;
 
-    if (!selectedEl || !iframe) {
-      setLoading(false);
-      return;
-    }
+    if (!selectedEl || !iframe) return;
 
     // Get the current HTML of the selected element
     const oldHTML = selectedEl.outerHTML;
@@ -253,7 +219,7 @@ by providing ?tr=fo-auto,<other transfromation> etc.
       const result = await GeminiAiModel.generateContent(prompt);
       const newHTML = (await result.response.text()).trim();
 
-      // ✅ Replace only the selected element
+      // Replace only the selected element
       const tempDiv = iframe.contentDocument?.createElement("div");
       if (tempDiv) {
         tempDiv.innerHTML = newHTML;
@@ -262,23 +228,22 @@ by providing ?tr=fo-auto,<other transfromation> etc.
         if (newNode && selectedEl.parentNode) {
           selectedEl.parentNode.replaceChild(newNode, selectedEl);
           selectedElRef.current = newNode as HTMLElement;
-          console.log("✅ Element replaced successfully");
+          // console.log("Element replaced successfully");
 
           const updatedSliderCode =
             iframe.contentDocument?.body?.innerHTML || newHTML;
-          console.log(updatedSliderCode);
+          // console.log(updatedSliderCode);
           setUpdateSlider(updatedSliderCode);
         }
       }
     } catch (err) {
-      console.error("AI generation failed:", err);
+      // console.error("AI generation failed:", err);
     }
 
     setLoading(false);
-    setCardPosition(null); // Close popup after AI change
   };
 
-  // ✅ Save slides to Firebase
+  // Save slides to Firebase
   const SaveAllSlides = async (updatedSlides: any[]) => {
     if (!projectId) return;
     await setDoc(
@@ -286,23 +251,38 @@ by providing ?tr=fo-auto,<other transfromation> etc.
       { slides: updatedSlides },
       { merge: true }
     );
-    console.log("✅ Slides updated to Firestore");
+    // console.log("Slides updated to Firestore");
   };
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 relative">
+      {" "}
+      {/* Added relative for FloatingActionTool positioning */}
       <iframe
         ref={iframeRef}
         className="w-[800px] h-[500px] border-0 rounded-2xl"
-        sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups" // ✅ full sandbox permissions
+        sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups" // full sandbox permissions
       />
-
-      <FloatingActionTool
-        position={cardPosition}
-        onClose={() => setCardPosition(null)}
-        loading={loading}
-        handleAiChange={(value: string) => handleAiSectionChange(value)}
-      />
+      {cardPosition &&
+        selectedElRef.current && ( // Only show if an element is selected
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="pointer-events-auto">
+              <FloatingActionTool
+                position={cardPosition}
+                onClose={() => {
+                  if (selectedElRef.current) {
+                    selectedElRef.current.style.outline = "";
+                    selectedElRef.current.removeAttribute("contenteditable");
+                    selectedElRef.current = null;
+                  }
+                  setCardPosition(null);
+                }}
+                loading={loading}
+                handleAiChange={(value: string) => handleAiSectionChange(value)}
+              />
+            </div>
+          </div>
+        )}
     </div>
   );
 }

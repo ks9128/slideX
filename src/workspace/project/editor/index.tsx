@@ -119,7 +119,6 @@ function Editor() {
     if (!docSnap.exists()) {
       return;
     }
-    console.log(JSON.stringify(docSnap.data()));
     setProjectDetail(docSnap.data());
     setLoading(false);
   };
@@ -135,11 +134,9 @@ function Editor() {
   const GenerateSlides = async () => {
     if (!projectDetail?.outline || projectDetail.outline.length === 0) return;
 
-    console.log("🚀 Starting slide generation...");
-
     for (
       let index = 0;
-      index < projectDetail.outline.length && index < 3;
+      index < projectDetail.outline.length && index < 6;
       index++
     ) {
       const metaData = projectDetail.outline[index];
@@ -153,12 +150,8 @@ function Editor() {
         )
         .replace("{METADATA}", JSON.stringify(metaData));
 
-      console.log("🧠 Generating slide", index + 1);
       await GeminiSlideCall(prompt, index); // wait for one slide to finish before next
-      console.log("✅ Finished slide", index + 1);
     }
-
-    console.log("🎉 All slides generated!");
 
     setIsSlidesGenerated(Date.now());
   };
@@ -191,7 +184,6 @@ function Editor() {
           }
 
           if (message.turnComplete) {
-            console.log("✅ Slide", index + 1, "complete");
             break; // important: exit loop when done
           }
         }
@@ -199,7 +191,7 @@ function Editor() {
 
       session.close();
     } catch (err) {
-      console.error("❌ Error generating slide", index + 1, err);
+      // Error handling
     }
   };
 
@@ -247,7 +239,6 @@ function Editor() {
       const slideNode = iframeDoc.querySelector("body > div") || iframeDoc.body;
       if (!slideNode) continue;
 
-      console.log(`Exporting slide ${i + 1}...`);
       //@ts-ignore
       const dataUrl = await htmlToImage.toPng(slideNode, { quality: 1 });
 
@@ -280,7 +271,7 @@ function Editor() {
           {/* Outlines  */}
           <OutlineSection
             outline={projectDetail?.outline ?? []}
-            handleUpdateOutline={() => console.log()}
+            handleUpdateOutline={() => {}}
             loading={loading}
             editable={false}
           />

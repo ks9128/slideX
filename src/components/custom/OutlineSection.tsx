@@ -29,7 +29,7 @@ function OutlineSection({
           {[1, 2, 3, 4].map((item, index) => (
             <Skeleton
               key={index}
-              className="h-[70px] w-full rounded-2xl mb-4 "
+              className="h-[70px] w-full rounded-2xl mb-4 bg-accent/30 animate-pulse"
             />
           ))}
         </div>

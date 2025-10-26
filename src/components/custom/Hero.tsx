@@ -1,13 +1,11 @@
-import React from 'react'
-import { HeroVideoDialog } from '../ui/hero-video-dialog';
-import { Button } from '../ui/button'
-import { Play } from 'lucide-react'
-import { useUser, SignInButton, SignIn } from '@clerk/clerk-react';
-import { Link } from 'react-router';
+import React from "react";
+import { HeroVideoDialog } from "../ui/hero-video-dialog";
+import { Button } from "../ui/button";
+import { Play } from "lucide-react";
+import { useUser, SignInButton, SignIn } from "@clerk/clerk-react";
+import { Link } from "react-router";
 function Hero() {
-
-    const {user} = useUser();
-
+  const { user } = useUser();
 
   return (
     <div className="flex flex-col items-center justify-center mt-28 space-y-4">
@@ -27,22 +25,21 @@ function Hero() {
           Watch Video <Play />
         </Button>
         {!user ? (
-          <SignInButton mode='modal'>
+          <SignInButton mode="modal">
             <Button size={"lg"}> Get started</Button>
           </SignInButton>
         ) : (
-          <Link to="/workspace" >
+          <Link to="/workspace">
             <Button size={"lg"}> Go to Workspace</Button>
           </Link>
         )}
       </div>
       <div className="relative max-w-3xl mt-10 ">
-        <h2 className="text-center my-4 ">Watch how to create AI PPT</h2>
         <HeroVideoDialog
           className="block dark:hidden"
           animationStyle="from-center"
           videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-          thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+          thumbnailSrc="src/assets/main_image.png"
           thumbnailAlt="Hero Video"
         />
         <HeroVideoDialog
@@ -57,4 +54,4 @@ function Hero() {
   );
 }
 
-export default Hero
+export default Hero;

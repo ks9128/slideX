@@ -10,39 +10,54 @@ type Props = {
   loading: boolean;
 };
 
-function FloatingActionTool({ position, onClose, handleAiChange ,loading}: Props) {
+function FloatingActionTool({
+  position,
+  onClose,
+  handleAiChange,
+  loading,
+}: Props) {
   const [userAiPrompt, setUserAiPrompt] = useState<string>();
   if (!position) return;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent page refresh
+    if (userAiPrompt) {
+      handleAiChange(userAiPrompt);
+      setUserAiPrompt("");
+    }
+  };
+
   return (
     <div
-      className="absolute z-50 bg-white text-sm px-3 py-2 rounded-lg shadow-xl border flex "
+      className="absolute z-50 bg-white text-sm px-3 py-2 rounded-lg shadow-xl border flex pointer-events-auto"
       style={{
-        top: position.y + 10,
-        left: position.x,
-        transform: "translate(-80%)",
+        position: "absolute",
+        top: `${position.y}px`,
+        left: `${position.x}px`,
+        transform: "translate(-50%, 0)", // Center horizontally
       }}
     >
-      <div className="flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <Sparkles className="h-4 w-4" />
         <input
           type="text"
           placeholder="Edit with Ai"
-          className="outline-none border-none "
+          className="outline-none border-none min-w-[150px]"
           onChange={(e) => setUserAiPrompt(e.target.value)}
           disabled={loading}
-          value={userAiPrompt}
+          value={userAiPrompt || ""}
         />
         {userAiPrompt && (
           <Button
             variant={"ghost"}
             size={"icon-sm"}
-            onClick={() => {handleAiChange(userAiPrompt); setUserAiPrompt("")}}
+            type="submit" // Make it a submit button
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
         )}
-        {loading && <Loader2Icon className="animate-spin"/>}
-      </div>
+        {loading && <Loader2Icon className="animate-spin" />}
+      </form>
 
       <Button variant={"ghost"} size={"icon-sm"} onClick={onClose}>
         <X />

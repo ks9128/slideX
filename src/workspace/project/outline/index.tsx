@@ -129,12 +129,10 @@ function Outline() {
 
       const response = result.response;
       const text = response.text();
-      console.log(text);
       const rawJson = text.replace("```json", "").replace("```", "");
       const JSONData = JSON.parse(rawJson);
       setOutline(JSONData);
     } catch (error) {
-      console.error("Error generating outline:", error);
       setError("Failed to generate outline");
     } finally {
       setLoading(false);
@@ -161,7 +159,6 @@ function Outline() {
         setError("Project not found");
       }
     } catch (err) {
-      console.error("Error fetching project:", err);
       setError("Failed to load project");
     } finally {
       setLoading(false);
@@ -228,9 +225,9 @@ function Outline() {
   return (
     <div className="flex items-center justify-center">
       <div className="max-w-3xl w-full px-4">
-        <h2 className="text-4xl font-bold mb-6 text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+        {/* <h2 className="text-4xl font-bold mb-6 text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
           Presentation Settings <span className="text-primary">&</span> Outline
-        </h2>
+        </h2> */}
         <SliderStyle
           selectStyle={(value: DesignStyle) => setSelectedStyle(value)}
         />
