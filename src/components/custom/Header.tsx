@@ -68,7 +68,9 @@ function Header() {
           </div>
           <div className="flex flex-1 items-center justify-between sm:items-stretch">
             <div className="flex shrink-0 items-center">
-              <img alt="SlideX" src={logo} className="h-10 w-auto" />
+              <Link to="/">
+                <img alt="SlideX" src={logo} className="h-10 w-auto" />
+              </Link>
             </div>
             {user && (
               <div className="hidden sm:ml-6 sm:block sm:w-full">

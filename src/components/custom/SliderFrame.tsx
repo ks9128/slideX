@@ -116,7 +116,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
 
     const handleClick = (e: MouseEvent) => {
       e.preventDefault(); // Prevent any default browser behavior that might cause page refresh
-      e.stopPropagation(); // allow editing text inside
+      e.stopPropagation(); // ✅ allow editing text inside
       const target = e.target as HTMLElement;
 
       if (selectedEl && selectedEl !== target) {
@@ -138,11 +138,10 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       selectedEl.setAttribute("contenteditable", "true");
       selectedEl.focus();
 
-      // console.log("Selected element:", selectedEl);
-      // Attach blur event dynamically
+      // ✅ Attach blur event dynamically
       // selectedEl?.addEventListener("blur", handleBlur);
 
-      // Calculate position relative to iframe container
+      // ✅ Calculate position relative to iframe container
       const rect = target.getBoundingClientRect();
 
       setCardPosition({
@@ -153,9 +152,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
 
     const handleBlur = () => {
       if (selectedEl) {
-        // console.log("Final edited element:", selectedEl.outerHTML);
         const updatedSliderCode = iframe.contentDocument?.body?.innerHTML;
-        console.log(updatedSliderCode);
         setUpdateSlider(updatedSliderCode);
       }
     };
@@ -169,7 +166,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       }
     };
 
-    // Wait for DOM content to be ready
+    // ✅ Wait for DOM content to be ready
     doc.addEventListener("DOMContentLoaded", () => {
       doc.body?.addEventListener("mouseover", handleMouseOver);
       doc.body?.addEventListener("mouseout", handleMouseOut);
@@ -177,7 +174,7 @@ function SliderFrame({ slide, colors, setUpdateSlider }: props) {
       doc.body?.addEventListener("keydown", handleKeyDown);
     });
 
-    // Cleanup listeners on unmount
+    // ✅ Cleanup listeners on unmount
     return () => {
       doc.body?.removeEventListener("mouseover", handleMouseOver);
       doc.body?.removeEventListener("mouseout", handleMouseOut);
@@ -215,7 +212,7 @@ by providing ?tr=fo-auto,<other transfromation> etc.
       const result = await GeminiAiModel.generateContent(prompt);
       const newHTML = (await result.response.text()).trim();
 
-      // Replace only the selected element
+      // ✅ Replace only the selected element
       const tempDiv = iframe.contentDocument?.createElement("div");
       if (tempDiv) {
         tempDiv.innerHTML = newHTML;
@@ -224,16 +221,14 @@ by providing ?tr=fo-auto,<other transfromation> etc.
         if (newNode && selectedEl.parentNode) {
           selectedEl.parentNode.replaceChild(newNode, selectedEl);
           selectedElRef.current = newNode as HTMLElement;
-          // console.log("Element replaced successfully");
 
           const updatedSliderCode =
             iframe.contentDocument?.body?.innerHTML || newHTML;
-          // console.log(updatedSliderCode);
           setUpdateSlider(updatedSliderCode);
         }
       }
     } catch (err) {
-      // console.error("AI generation failed:", err);
+      // Error handling
     }
 
     setLoading(false);
@@ -246,7 +241,7 @@ by providing ?tr=fo-auto,<other transfromation> etc.
       <iframe
         ref={iframeRef}
         className="w-[800px] h-[500px] border-0 rounded-2xl"
-        sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups" // full sandbox permissions
+        sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups" // ✅ full sandbox permissions
       />
       {cardPosition &&
         selectedElRef.current && ( // Only show if an element is selected

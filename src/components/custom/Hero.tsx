@@ -1,3 +1,4 @@
+
 import { HeroVideoDialog } from "../ui/hero-video-dialog";
 import { Button } from "../ui/button";
 import { Play } from "lucide-react";
@@ -38,7 +39,7 @@ function Hero() {
           className="block dark:hidden"
           animationStyle="from-center"
           videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-          thumbnailSrc="/src/assets/main_image.png"
+          thumbnailSrc="/main_image.png"
           thumbnailAlt="Hero Video"
         />
         <HeroVideoDialog
