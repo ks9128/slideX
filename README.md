@@ -16,7 +16,7 @@
 
 SlideX is a modern web application for creating beautiful presentations and slideshows. Built with React 19, TypeScript, and Vite, it provides a seamless experience for creating, editing, and managing presentations using the power of AI.
 
-[![SlideX Demo](https://img.youtube.com/vi/xgTlJS_-94A/maxresdefault.jpg)](https://youtu.be/xgTlJS_-94A)
+[![SlideX Demo](main_image.png)](https://youtu.be/xgTlJS_-94A)
 
 ## Features
 
@@ -45,16 +45,16 @@ SlideX is a modern web application for creating beautiful presentations and slid
 
 ## Tech Stack
 
-| Category             | Technology                 |
-| -------------------- | -------------------------- |
-| **Frontend**         | React 19, TypeScript, Vite |
-| **Styling**          | Tailwind CSS, Radix UI     |
-| **Routing**          | React Router v7            |
-| **Authentication**   | Clerk                      |
-| **Backend**          | Firebase (Firestore)       |
-| **AI Engine**        | Google Gemini AI           |
-| **State Management** | React Context API          |
-| **Form Handling**    | React Hook Form, Zod       |
+| Category           | Technology                |
+| ------------------ | ------------------------- |
+| **Frontend**       | React 19, TypeScript, Vite |
+| **Styling**        | Tailwind CSS, Radix UI    |
+| **Routing**        | React Router v7           |
+| **Authentication** | Clerk                     |
+| **Backend**        | Firebase (Firestore)      |
+| **AI Engine**      | Google Gemini AI          |
+| **State Management** | React Context API       |
+| **Form Handling**  | React Hook Form, Zod      |
 
 ## Installation & Setup
 
