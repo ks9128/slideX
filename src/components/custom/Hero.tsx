@@ -43,14 +43,14 @@ function Hero() {
         <HeroVideoDialog
           className="block dark:hidden w-full"
           animationStyle="from-center"
-          videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+          videoSrc="https://www.youtube.com/embed/xgTlJS_-94A"
           thumbnailSrc="/main_image.png"
           thumbnailAlt="Hero Video"
         />
         <HeroVideoDialog
           className="hidden dark:block w-full"
           animationStyle="from-center"
-          videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+          videoSrc="https://www.youtube.com/embed/xgTlJS_-94A"
           thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
           thumbnailAlt="Hero Video"
         />
