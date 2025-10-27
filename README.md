@@ -1,6 +1,7 @@
 # SlideX - AI-Powered Presentation Generator
 
-**A modern web application for creating beautiful presentations and slideshows using AI**
+**SlideX** is a modern AI-based web application that allows users to create complete, visually appealing presentations with just a single prompt.  
+It combines automation, intelligent content generation, and sleek design to save hours of manual work while maintaining professional quality.
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -8,40 +9,66 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com/)
 
-[Features](#features) • [Tech Stack](#tech-stack) • [Installation](#installation--setup) • [API Documentation](#api-documentation--testing) • [Contributing](#contributing)
+---
+
+<div align="center">
+
+<h3><strong>Access the Live Application</strong></h3>
+
+<a href="https://slidex-nu.vercel.app/" target="_blank" style="text-decoration:none; font-size:16px; font-weight:600; color:#007acc;">
+https://slidex-nu.vercel.app/
+</a>
+
+<p style="margin-top:8px;">Fully deployed — explore, generate, and design your presentations online.</p>
+
+<hr style="width:60%; margin:25px auto; border:0.5px solid #e0e0e0;">
+
+</div>
 
 ---
 
 ## Overview
 
-SlideX is a modern web application for creating beautiful presentations and slideshows. Built with React 19, TypeScript, and Vite, it provides a seamless experience for creating, editing, and managing presentations using the power of AI.
+**SlideX** provides a seamless experience for generating, editing, and managing presentations with AI.  
+Built using **React 19**, **TypeScript**, and **Vite**, it integrates Google's **Gemini AI** for content generation and Firebase for real-time data handling.
 
-[![SlideX Demo](./main_image.png)](https://youtu.be/xgTlJS_-94A)
+<div align="center">
+  
+###  Watch the Demo Video
+
+[![SlideX Preview](./main_image.png)](https://youtu.be/xgTlJS_-94A)
+
+</div>
+
+---
 
 ## Features
 
-### AI-Powered Generation
+### Intelligent Automation
 
-- **Smart Presentation Creation**: Generate complete presentations from simple topic prompts
-- **Outline Generation**: AI creates structured slide outlines with relevant content
-- **Design Automation**: Automatically apply beautiful templates and styling
+- Generate full presentations from short prompts or topic inputs
+- AI outlines slides with relevant text and headings
+- Automatically applies layout and design consistency
 
-### Design & Customization
+### Design & Editing
 
-- **Multiple Templates**: Choose from various design styles and color schemes
-- **Visual Editor**: Rich editing experience for slide content
-- **Export Options**: Download presentations as PowerPoint files
+- Choose from multiple pre-built templates and color themes
+- Intuitive visual editor for slide customization
+- Export ready-to-present decks as PowerPoint files
 
-### User Management
+### Account & Storage
 
-- **Secure Authentication**: Protected by Clerk authentication
-- **Cloud Storage**: Save and access presentations from anywhere
-- **Credit System**: Freemium model with paid plans for unlimited access
+- Secure user authentication with **Clerk**
+- Cloud storage powered by **Firebase** for persistent access
+- Credit-based freemium system for controlled AI usage
 
-### Responsive Experience
+### Experience
 
-- **Cross-Device Compatibility**: Works flawlessly on desktop, tablet, and mobile
-- **Modern UI/UX**: Clean and intuitive interface built with Radix UI and Tailwind CSS
+- Modern and responsive UI/UX
+- Optimized for desktop, tablet, and mobile
+- Minimal, distraction-free interface built with **Radix UI** and **Tailwind CSS**
+
+---
 
 ## Tech Stack
 
@@ -56,53 +83,53 @@ SlideX is a modern web application for creating beautiful presentations and slid
 | **State Management** | React Context API          |
 | **Form Handling**    | React Hook Form, Zod       |
 
+---
+
 ## Installation & Setup
 
 ### Prerequisites
 
-Before you begin, ensure you have the following installed:
+- Node.js (v16 or later)
+- npm or yarn package manager
 
-- **Node.js** (v16 or higher)
-- **npm** or **yarn** package manager
-
-### 1. Clone the Repository
+### Steps
 
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd slidex
-```
 
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 npm install
 ```
 
-### 3. Environment Configuration
+### Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+Create a `.env` file in the root directory and add:
 
 ```
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_FIREBASE_API_KEY=your_firebase_api_key
 ```
 
-### 4. Start the Application
+### Development
 
 ```bash
-# Development mode with hot reload
+# Start the development server
 npm run dev
 
-# Production build
+# Build for production
 npm run build
 
-# Preview production build
+# Preview the production build
 npm run preview
 ```
 
-The application will be available at `http://localhost:5173`
+The app will be available at `http://localhost:5173`.
 
-## API Documentation & Testing
+---
+
+## API Documentation
 
 SlideX uses Firebase as its backend service. The application interacts with Firebase APIs for:
 
@@ -124,37 +151,33 @@ SlideX uses Firebase as its backend service. The application interacts with Fire
 - Live streaming for real-time slide creation
 - Template-based design generation
 
+---
+
 ## Contributing
 
-We welcome contributions! Please follow these steps:
+Contributions are welcome! Here's how you can help:
 
-1. **Fork** the repository
-2. **Create** your feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Development Guidelines
+Please ensure your code follows the existing style and includes appropriate tests.
 
-- Follow the existing code style and structure
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
+---
 
 ## License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Issues & Support
+---
+
+## Support
 
 - **Bug Reports**: [GitHub Issues](https://github.com/ks9128/slidex/issues)
 - **Feature Requests**: [GitHub Discussions](https://github.com/ks9128/slidex/discussions)
-
-## Contact
-
-- **GitHub**: [@ks9128](https://github.com/ks9128)
-- **LinkedIn**: [Khalid Saifullah](https://www.linkedin.com/in/khalidsaifullah-ks/)
-- **Project Link**: [SlideX Repository](https://github.com/ks9128/slidex)
+- **Contact**: [@ks9128](https://github.com/ks9128)
 
 ---
 
