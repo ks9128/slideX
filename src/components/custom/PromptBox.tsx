@@ -42,13 +42,13 @@ function PromptBox() {
     navigate("/workspace/project/" + projectId + "/outline");
   };
   return (
-    <div className="w-full flex items-center justify-center mt-28">
-      <div className="flex flex-col items-center justify-center space-y-4">
-        <h2 className=" font-bold text-4xl ">
+    <div className="w-full flex items-center justify-center mt-16 px-4 sm:mt-28">
+      <div className="flex flex-col items-center justify-center space-y-4 w-full max-w-2xl">
+        <h2 className="font-bold text-3xl sm:text-4xl">
           Describe any topic, we'll design the{" "}
           <span className="text-primary">PPT</span> slides!
         </h2>
-        <p className="text-xl text-gray-500">
+        <p className="text-lg sm:text-xl text-gray-500">
           Your design will be saved in new project
         </p>
 

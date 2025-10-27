@@ -257,8 +257,8 @@ function Editor() {
           </AlertDescription>
         </Alert>
       </div> */}
-      <div className="grid grid-cols-5 p-10 gap-10 ">
-        <div className="col-span-2 h-[90vh] overflow-auto ">
+      <div className="grid grid-cols-1 lg:grid-cols-5 p-4 sm:p-10 gap-6 sm:gap-10 ">
+        <div className="col-span-1 lg:col-span-2 h-[90vh] overflow-auto ">
           {/* Outlines  */}
           <OutlineSection
             outline={projectDetail?.outline ?? []}
@@ -267,7 +267,10 @@ function Editor() {
             editable={false}
           />
         </div>
-        <div className="col-span-3 h-screen overflow-auto" ref={containerRef}>
+        <div
+          className="col-span-1 lg:col-span-3 h-screen overflow-auto"
+          ref={containerRef}
+        >
           {/* Slides  */}
           {sliders?.map((slide: any, index: number) => (
             <SliderFrame
@@ -284,8 +287,7 @@ function Editor() {
         <Button
           onClick={exportAllIframesToPPT}
           size={"lg"}
-          className="fixed bottom-6
-            transform left-1/2 -translate-x-1/2"
+          className="fixed bottom-4 sm:bottom-6 transform left-1/2 -translate-x-1/2 w-11/12 sm:w-auto max-w-xs sm:max-w-none"
           disabled={downloadLoading}
         >
           {downloadLoading ? (

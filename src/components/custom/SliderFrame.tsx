@@ -235,12 +235,12 @@ by providing ?tr=fo-auto,<other transfromation> etc.
   };
 
   return (
-    <div className="mb-5 relative">
+    <div className="mb-5 relative w-full overflow-x-auto">
       {" "}
       {/* Added relative for FloatingActionTool positioning */}
       <iframe
         ref={iframeRef}
-        className="w-[800px] h-[500px] border-0 rounded-2xl"
+        className="w-full min-w-[300px] sm:min-w-[600px] md:min-w-[800px] h-[300px] sm:h-[400px] md:h-[500px] border-0 rounded-2xl"
         sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups" // ✅ full sandbox permissions
       />
       {cardPosition &&

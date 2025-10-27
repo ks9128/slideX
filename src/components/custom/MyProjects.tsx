@@ -54,12 +54,9 @@ function MyProjects() {
   };
 
   return (
-    <div className="mx-32 mt-20 mb-10">
+    <div className="mx-4 sm:mx-8 md:mx-32 mt-20 mb-10">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold text-foreground">My Projects</h2>
-        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors">
-          + Create New Project
-        </Button>
       </div>
       <div>
         {!projects.length ? (
@@ -77,11 +74,7 @@ function MyProjects() {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <div className="flex gap-2">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Create Project
-                </Button>
-              </div>
+              <div className="flex gap-2"></div>
             </EmptyContent>
             <Button
               variant="link"

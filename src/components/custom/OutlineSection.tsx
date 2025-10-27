@@ -19,8 +19,8 @@ function OutlineSection({
   // Added editable to destructuring with default value
 
   return (
-    <div className="mt-8">
-      <h2 className="font-bold text-3xl text-foreground mb-4 flex items-center gap-2">
+    <div className="mt-8 px-4">
+      <h2 className="font-bold text-2xl sm:text-3xl text-foreground mb-4 flex items-center gap-2">
         <span className="bg-primary w-1 h-6 rounded-full"></span>
         <span>Slide Outline</span>
       </h2>
@@ -39,14 +39,14 @@ function OutlineSection({
         {outline?.map((item, index) => (
           <div
             key={index}
-            className="max-w-3xl w-full p-4 rounded-2xl flex gap-6 items-center border border-border bg-background shadow-sm hover:shadow-md transition-shadow duration-300 mt-4"
+            className="w-full p-4 rounded-2xl flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center border border-border bg-background shadow-sm hover:shadow-md transition-shadow duration-300 mt-4"
           >
-            <h2 className="font-bold text-2xl p-4 bg-primary/10 text-primary rounded-xl min-w-[60px] text-center">
+            <h2 className="font-bold text-xl sm:text-2xl p-3 sm:p-4 bg-primary/10 text-primary rounded-xl min-w-[40px] sm:min-w-[60px] text-center">
               {item.slideNo}
             </h2>
-            <div className="flex gap-6 items-center justify-between flex-grow">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center justify-between flex-grow">
               <div className="flex-1">
-                <h2 className="font-bold text-lg text-foreground mb-1">
+                <h2 className="font-bold text-lg sm:text-xl text-foreground mb-1">
                   {item.slidePoint}
                 </h2>
                 <p className="text-muted-foreground text-sm leading-relaxed">

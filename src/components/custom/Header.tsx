@@ -50,11 +50,11 @@ function Header() {
     <nav className="relative bg-white shadow-sm border-b border-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex h-14 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <div className="flex items-center sm:hidden">
             {/* Mobile menu button*/}
             <button
               type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors mr-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <span className="absolute -inset-0.5" />
@@ -65,11 +65,20 @@ function Header() {
                 <MenuIcon className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
-          </div>
-          <div className="flex flex-1 items-center justify-between sm:items-stretch">
             <div className="flex shrink-0 items-center">
               <Link to="/">
-                <img alt="SlideX" src={logo} className="h-10 w-auto" />
+                <img alt="SlideX" src={logo} className="h-8 w-auto" />
+              </Link>
+            </div>
+          </div>
+          <div className="hidden sm:flex flex-1 items-center justify-between sm:items-stretch">
+            <div className="flex shrink-0 items-center">
+              <Link to="/">
+                <img
+                  alt="SlideX"
+                  src={logo}
+                  className="hidden sm:block h-10 w-auto"
+                />
               </Link>
             </div>
             {user && (
@@ -129,12 +138,20 @@ function Header() {
               <div className="flex items-center gap-2">
                 {location.pathname.includes("workspace") ? (
                   !hasUnlimitedAccess && (
-                    <div className="hidden md:flex items-center px-3 py-1 gap-1 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full border border-amber-200 shadow-xs animate-pulse">
-                      <GemIcon size={"1rem"} className="text-amber-600" />
-                      <span className="text-xs font-semibold text-amber-800">
-                        {userDetail?.credits ?? 0}
-                      </span>
-                    </div>
+                    <>
+                      <div className="hidden md:flex items-center px-3 py-1 gap-1 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full border border-amber-200 shadow-xs animate-pulse">
+                        <GemIcon size={"1rem"} className="text-amber-600" />
+                        <span className="text-xs font-semibold text-amber-800">
+                          {userDetail?.credits ?? 0}
+                        </span>
+                      </div>
+                      <div className="flex md:hidden items-center px-2 py-1 gap-1 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full border border-amber-200 shadow-xs animate-pulse">
+                        <GemIcon size={"0.75rem"} className="text-amber-600" />
+                        <span className="text-xs font-semibold text-amber-800">
+                          {userDetail?.credits ?? 0}
+                        </span>
+                      </div>
+                    </>
                   )
                 ) : (
                   <Link to="/workspace" className="hidden md:block">
@@ -156,8 +173,8 @@ function Header() {
 
       {/* Mobile menu */}
       {user && mobileMenuOpen && (
-        <div className="sm:hidden">
-          <div className="space-y-1 px-2 pt-2 pb-3">
+        <div className="sm:hidden bg-white border-t border-gray-100">
+          <div className="space-y-1 px-4 py-3">
             {MenuOptions.map((item, index) => (
               <Link
                 key={index}

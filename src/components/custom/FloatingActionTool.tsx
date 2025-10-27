@@ -28,11 +28,11 @@ function FloatingActionTool({
 
   return (
     <div
-      className="absolute z-50 bg-white text-sm px-3 py-2 rounded-lg shadow-xl border flex pointer-events-auto"
+      className="absolute z-50 bg-white text-sm px-3 py-2 rounded-lg shadow-xl border flex pointer-events-auto max-w-xs sm:max-w-sm"
       style={{
         position: "absolute",
         top: `${position.y}px`,
-        left: `${position.x}px`,
+        left: "50%",
         transform: "translate(-50%, 0)", // Center horizontally
       }}
     >
@@ -41,7 +41,7 @@ function FloatingActionTool({
         <input
           type="text"
           placeholder="Edit with Ai"
-          className="outline-none border-none min-w-[150px]"
+          className="outline-none border-none min-w-[100px] sm:min-w-[150px]"
           onChange={(e) => setUserAiPrompt(e.target.value)}
           disabled={loading}
           value={userAiPrompt || ""}
