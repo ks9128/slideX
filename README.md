@@ -8,7 +8,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com/)
 
-[Features](#-features) • [Tech Stack](#️-tech-stack) • [Installation](#️-installation--setup) • [API Documentation](#-api-documentation--testing) • [Contributing](#-contributing)
+[Features](#features) • [Tech Stack](#tech-stack) • [Installation](#installation--setup) • [API Documentation](#api-documentation--testing) • [Contributing](#contributing)
 
 ---
 
