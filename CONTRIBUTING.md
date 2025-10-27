@@ -13,11 +13,13 @@ This project and everyone participating in it is governed by our Code of Conduct
 This section guides you through submitting a bug report for SlideX. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
 **Before Submitting A Bug Report**
+
 - Check the documentation for a list of common questions and problems.
 - Determine which repository the problem should be reported in.
 - Check if the issue has already been reported.
 
 **How Do I Submit A (Good) Bug Report?**
+
 - Use a clear and descriptive title for the issue
 - Describe the exact steps which reproduce the problem
 - Provide specific examples to demonstrate the steps
@@ -30,10 +32,12 @@ This section guides you through submitting a bug report for SlideX. Following th
 This section guides you through submitting an enhancement suggestion for SlideX, including completely new features and minor improvements to existing functionality.
 
 **Before Submitting An Enhancement Suggestion**
+
 - Check if the enhancement has already been suggested
 - Determine which repository the enhancement should be suggested in
 
 **How Do I Submit A (Good) Enhancement Suggestion?**
+
 - Use a clear and descriptive title for the issue
 - Provide a step-by-step description of the suggested enhancement
 - Provide specific examples to demonstrate the steps
@@ -42,6 +46,7 @@ This section guides you through submitting an enhancement suggestion for SlideX,
 ### Pull Requests
 
 The process described here has several goals:
+
 - Maintain SlideX's quality
 - Fix problems that are important to users
 - Engage the community in working toward the best possible SlideX
@@ -58,17 +63,20 @@ The process described here has several goals:
 ## Styleguides
 
 ### Git Commit Messages
+
 - Use the present tense ("Add feature" not "Added feature")
 - Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 - Limit the first line to 72 characters or less
 - Reference issues and pull requests liberally after the first line
 
 ### TypeScript Styleguide
+
 - All TypeScript must adhere to our ESLint rules
 - Use TypeScript rather than JavaScript where possible
 - Prefer modern ES6+ features when available
 
 ### CSS/Sass Styleguide
+
 - Use Tailwind CSS classes rather than custom CSS where possible
 - Follow the existing component structure in the codebase
 
@@ -79,6 +87,7 @@ The process described here has several goals:
 This section lists the labels we use to help us track and manage issues and pull requests.
 
 #### Type of Issue and Issue State
+
 - `bug` - Issues that are bugs
 - `enhancement` - Issues that are feature requests
 - `documentation` - Issues that are documentation related

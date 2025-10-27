@@ -7,8 +7,9 @@ import type { Project } from "../outline";
 import SliderFrame from "@/components/custom/SliderFrame";
 import * as htmlToImage from "html-to-image";
 import PptxGenJS from "pptxgenjs";
-import { FileDown, Loader2 } from "lucide-react";
+import { FileDown, InfoIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const SLIDER_PROMPT = `Generate HTML (TailwindCSS + Flowbite UI + Lucide Icons) 
 code for a 16:9 ppt slider in Modern Dark style.
@@ -248,7 +249,7 @@ function Editor() {
 
   return (
     <div>
-      {/* <div className="flex items-center justify-center mt-4">
+      <div className="flex items-center justify-center mt-4">
         <Alert variant="destructive" className="max-w-lg">
           <InfoIcon />
           <AlertTitle>Heads up!</AlertTitle>
@@ -256,7 +257,7 @@ function Editor() {
             This is Application Demo, Maximum 3 Slider can generator for demo
           </AlertDescription>
         </Alert>
-      </div> */}
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-5 p-4 sm:p-10 gap-6 sm:gap-10 ">
         <div className="col-span-1 lg:col-span-2 h-[90vh] overflow-auto ">
           {/* Outlines  */}

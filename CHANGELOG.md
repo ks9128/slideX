@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - AI-powered presentation generation
 - Multiple design templates
 - Cloud storage with Firebase
@@ -16,16 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Credit system for usage tracking
 
 ### Changed
+
 - Improved UI/UX design
 - Enhanced responsive design for all devices
 - Optimized performance with Vite and React 19
 
 ### Fixed
+
 - Various bug fixes and performance improvements
 
 ## [1.0.0] - 2025-10-27
 
 ### Added
+
 - Initial release of SlideX
 - Core presentation generation functionality
 - Basic UI components
